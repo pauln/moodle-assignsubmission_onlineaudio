@@ -131,12 +131,12 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
                 $filepath = $file->get_filepath();
                 $mimetype = $file->get_mimetype();
                 $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$this->assignment->get_context()->id.'/assignsubmission_onlineaudio/submission_onlineaudio/'.$submissionid.'/'.$filename);
-                $output .= '<img src="'.$OUTPUT->pix_url(file_mimetype_icon($mimetype)).'" class="icon" alt="'.$mimetype.'" />';
+                $output .= '<span style="white-space:nowrap;"><img src="'.$OUTPUT->pix_url(file_mimetype_icon($mimetype)).'" class="icon" alt="'.$mimetype.'" />';
                 // Dummy link for media filters
                 $filtered = filter_text('<a href="'.$path.'" style="display:none;"> </a> ', $this->assignment->get_course()->id);
                 $filtered = preg_replace('~<a.+?</a>~','',$filtered);
                 // Add a real link after the dummy one, so that we get a proper download link no matter what
-                $output .= $filtered . '<a href="'.$path.'" >'.s($filename).'</a>';
+                $output .= $filtered . '<a href="'.$path.'" >'.s($filename).'</a></span>';
                 if($allowdelete) {
                     $delurl  = "$CFG->wwwroot/mod/assign/submission/onlineaudio/delete.php?id={$this->assignment->get_course_module()->id}&amp;sid={$submissionid}&amp;path=$filepath&amp;file=$filename";//&amp;userid={$submission->userid} &amp;mode=$mode&amp;offset=$offset
 
