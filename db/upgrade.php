@@ -17,8 +17,8 @@
 /**
  * Upgrade code for install
  *
- * @package   assignsubmission_file
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @package   assignsubmission_onlineaudio
+ * @copyright 2012 Paul Nicholls
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,8 +27,6 @@
  * @param int $oldversion
  * @return bool
  */
-function xmldb_submission_onlineaudio_upgrade($oldversion) {
+function xmldb_assignsubmission_onlineaudio_upgrade($oldversion) {
     return true;
 }
-
-

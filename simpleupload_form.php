@@ -18,8 +18,8 @@
 require_once($CFG->libdir.'/formslib.php');//putting this is as a safety as i got a class not found error.
 MoodleQuickForm::registerElementType('simplefile', dirname(__FILE__).'/simplefile.php', 'MoodleQuickForm_simplefile');
 /**
- * @package   mod-assignment
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @package assignsubmission_onlineaudio
+ * @copyright 2012 Paul Nicholls
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_assign_submission_onlineaudioupload_form extends moodleform {
@@ -35,8 +35,6 @@ class mod_assign_submission_onlineaudioupload_form extends moodleform {
         $this->simpleupload_setMaxFileSize($instance['options']['maxbytes']);
 
         // visible elements
-        //$mform->addElement('filemanager', 'newfile', get_string('uploadafile'));
-        //$mform->addElement('filemanager', 'files_filemanager', get_string('uploadafile'), null, $instance['options']);
         $mform->addElement('hidden', 'MAX_FILE_SIZE', $instance['options']['maxbytes']);
         $mform->addElement('simplefile', 'assignment_file', $instance['caption'], array('size'=>32));
 

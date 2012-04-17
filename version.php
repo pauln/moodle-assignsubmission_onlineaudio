@@ -17,12 +17,12 @@
 /**
  * This file contains the version information for the file submission plugin
  *
- * @package    assignsubmission_file
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @package    assignsubmission_onlineaudio
+ * @copyright 2012 Paul Nicholls
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version   = 2012011600;
+$plugin->version   = 2012041800;
 $plugin->requires  = 2011110200;
 
 $plugin->component = 'assignsubmission_onlineaudio';

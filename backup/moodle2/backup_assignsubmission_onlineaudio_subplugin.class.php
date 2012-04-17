@@ -17,8 +17,8 @@
 /**
  * This file contains the class for backup of this submission plugin
  * 
- * @package assignsubmission_file
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @package assignsubmission_onlineaudio
+ * @copyright 2012 Paul Nicholls
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,8 +29,8 @@ defined('MOODLE_INTERNAL') || die();
  *
  * This just adds its filearea to the annotations and records the number of files
  *
- * @package assignsubmission_file
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @package assignsubmission_onlineaudio
+ * @copyright 2012 Paul Nicholls
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_assignsubmission_onlineaudio_subplugin extends backup_subplugin {

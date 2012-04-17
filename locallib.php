@@ -19,8 +19,8 @@
  * 
  * This class provides all the functionality for the new assign module.
  *
- * @package assignsubmission_file
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @package assignsubmission_onlineaudio
+ * @copyright 2012 Paul Nicholls
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -36,10 +36,10 @@ define('ASSIGN_SUBMISSION_ONLINEAUDIO_MAX_SUMMARY_FILES', 5);
 define('ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO', 'submission_onlineaudio');
 
 /*
- * library class for file submission plugin extending submission plugin base class
+ * library class for online audio recording submission plugin extending submission plugin base class
  * 
- * @package   assignsubmission_file
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @package   assignsubmission_onlineaudio
+ * @copyright 2012 Paul Nicholls
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class assignment_submission_onlineaudio extends assignment_submission_plugin {
