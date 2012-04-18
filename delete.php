@@ -33,6 +33,11 @@ $PAGE->set_url($url);
 
 $submission_plugin = $assignment->get_submission_plugin_by_type('onlineaudio');
 $submission = $DB->get_record('assign_submission', array('assignment'=>$assignment->get_instance()->id, 'id'=>$sid), '*', MUST_EXIST);
+
+if ($submission->userid != $USER->id) {
+    require_capability('mod/assign:grade', $assignment->get_context());
+}
+
 $files = $submission_plugin->get_files($submission);
 
 $found = false;
