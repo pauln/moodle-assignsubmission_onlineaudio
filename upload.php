@@ -8,7 +8,7 @@ $id = required_param('id', PARAM_INT);  // Course module ID
 $sid = required_param('sid', PARAM_INT);  // Submission ID
 
 
-$url = new moodle_url('/mod/assign/submission/onlineaudio/delete.php');
+$url = new moodle_url('/mod/assign/submission/onlineaudio/upload.php');
 $viewurl = new moodle_url('/mod/assign/view.php');
 
 $cm = get_coursemodule_from_id('assign', $id, 0, false, MUST_EXIST);

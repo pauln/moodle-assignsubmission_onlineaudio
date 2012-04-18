@@ -181,7 +181,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
         }
         $count = $this->count_files($submissionid, ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO);
         if($count < $maxfiles) {
-            $url='submission/onlineaudio/assets/recorder.swf?gateway='.$CFG->wwwroot.'/mod/assign/submission/onlineaudio/simpleupload.php';
+            $url='submission/onlineaudio/assets/recorder.swf?gateway='.$CFG->wwwroot.'/mod/assign/submission/onlineaudio/upload.php';
 
             $flashvars="&filefield=assignment_file&id={$this->assignment->get_course_module()->id}&sid={$submissionid}";
 
