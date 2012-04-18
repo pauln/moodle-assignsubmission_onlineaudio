@@ -183,7 +183,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
         if($count < $maxfiles) {
             $url='submission/onlineaudio/assets/recorder.swf?gateway='.$CFG->wwwroot.'/mod/assign/submission/onlineaudio/simpleupload.php';
 
-            $flashvars="&filefield=assignment_file&id={$this->assignment->get_course_module()->id}&sid={$submissionid}&sesskey={$USER->sesskey}&_qf__mod_assign_submission_onlineaudioupload_form=1";
+            $flashvars="&filefield=assignment_file&id={$this->assignment->get_course_module()->id}&sid={$submissionid}";
 
             $html = '<script type="text/javascript" src="submission/onlineaudio/assets/swfobject.js"></script>
                 <script type="text/javascript">
@@ -236,7 +236,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
      * @param stdClass $file
      * @return bool 
      */
-    public function add_recording(stdClass $submission, stdClass $form_data) {
+    public function add_recording(stdClass $submission) {
         global $USER, $DB;
 
         $fs = get_file_storage();
