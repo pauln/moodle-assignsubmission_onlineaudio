@@ -69,7 +69,7 @@ class restore_assignsubmission_onlineaudio_subplugin extends restore_subplugin {
         // the mapping is set in the restore for the core assign activity. When a submission node is processed
         $data->submission = $this->get_mappingid('submission', $data->submission);
 
-        $DB->insert_record('assign_submission_onlineaudio', $data);
+        $DB->insert_record('assignsubmission_onlineaudio', $data);
         
         $this->add_related_files('assignsubmission_onlineaudio', 'submission_onlineaudio', 'submission', null, $oldsubmissionid);
     }

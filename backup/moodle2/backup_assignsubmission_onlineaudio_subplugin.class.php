@@ -52,7 +52,7 @@ class backup_assignsubmission_onlineaudio_subplugin extends backup_subplugin {
         $subpluginwrapper->add_child($subpluginelement);
 
         // set source to populate the data
-        $subpluginelement->set_source_table('assign_submission_onlineaudio', array('submission' => backup::VAR_PARENTID));
+        $subpluginelement->set_source_table('assignsubmission_onlineaudio', array('submission' => backup::VAR_PARENTID));
 
         $subpluginelement->annotate_files('assignsubmission_onlineaudio', 'submission_onlineaudio', 'submission');// The parent is the submission
         return $subplugin;

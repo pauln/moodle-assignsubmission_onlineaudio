@@ -23,13 +23,14 @@ $context = context_module::instance($cm->id);
 
 require_capability('mod/assign:view', $context);
    
-$assignment = new assignment($context,$cm,$course);
+$assignment = new assign($context,$cm,$course);
 
 $url->param('id', $id);
 $viewurl->param('id', $id);
 $viewurl->param('action', 'editsubmission');
 
 $PAGE->set_url($url);
+$PAGE->set_heading($assignment->get_course_module()->name);
 
 $submission_plugin = $assignment->get_submission_plugin_by_type('onlineaudio');
 $submission = $DB->get_record('assign_submission', array('assignment'=>$assignment->get_instance()->id, 'id'=>$sid), '*', MUST_EXIST);
@@ -49,6 +50,7 @@ foreach($files as $filename => $file) {
 }
 
 if(!$found) {
+    echo $OUTPUT->header();
     echo $OUTPUT->notification(get_string('nosuchfile', 'assignsubmission_onlineaudio'));
     echo $OUTPUT->continue_button($viewurl);
 } else {
@@ -63,6 +65,7 @@ if(!$found) {
         $confirmurl->param('path', $delpath);
         $confirmurl->param('confirm', 1);
 
+        echo $OUTPUT->header();
         echo $OUTPUT->confirm(get_string('confirmdeletefile', 'assignsubmission_onlineaudio', $delpath.$delfile), $confirmurl, $viewurl);
     }
 }

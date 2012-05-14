@@ -21,7 +21,7 @@ $context = context_module::instance($cm->id);
 
 require_capability('mod/assign:submit', $context);
 
-$assignment = new assignment($context,$cm,$course);
+$assignment = new assign($context,$cm,$course);
 
 $url->param('id', $id);
 $viewurl->param('id', $id);
@@ -30,7 +30,7 @@ $viewurl->param('action', 'editsubmission');
 $PAGE->set_url($url);
 
 $submission_plugin = $assignment->get_submission_plugin_by_type('onlineaudio');
-$submission = $DB->get_record('assign_submission', array('assignment'=>$assignment->get_instance()->id, 'id'=>$sid), '*', MUST_EXIST);
+$submission = $submission_plugin->get_user_submission_record($USER->id, true);
 
 if($submission_plugin->add_recording($submission)) {
     redirect($viewurl);

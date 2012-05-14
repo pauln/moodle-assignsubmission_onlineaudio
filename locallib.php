@@ -42,7 +42,7 @@ define('ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO', 'submission_onlineaudio');
  * @copyright 2012 Paul Nicholls
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class assignment_submission_onlineaudio extends assignment_submission_plugin {
+class assign_submission_onlineaudio extends assign_submission_plugin {
     
     /**
      * Get the name of the file submission plugin
@@ -50,6 +50,45 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
      */
     public function get_name() {
         return get_string('recording', 'assignsubmission_onlineaudio');
+    }
+
+    /**
+     * Load the submission object for a particular user, optionally creating it if required
+     * I don't want to have to do this, but it's private on the assign() class, so can't be used!
+     *
+     * @param int $userid The id of the user whose submission we want or 0 in which case USER->id is used
+     * @param bool $create optional Defaults to false. If set to true a new submission object will be created in the database
+     * @return stdClass The submission
+     */
+    public function get_user_submission_record($userid, $create) {
+        global $DB, $USER;
+
+        if (!$userid) {
+            $userid = $USER->id;
+        }
+        // if the userid is not null then use userid
+        $submission = $DB->get_record('assign_submission', array('assignment'=>$this->assignment->get_instance()->id, 'userid'=>$userid));
+
+        if ($submission) {
+            return $submission;
+        }
+        if ($create) {
+            $submission = new stdClass();
+            $submission->assignment   = $this->assignment->get_instance()->id;
+            $submission->userid       = $userid;
+            $submission->timecreated = time();
+            $submission->timemodified = $submission->timecreated;
+
+            if ($this->assignment->get_instance()->submissiondrafts) {
+                $submission->status = ASSIGN_SUBMISSION_STATUS_DRAFT;
+            } else {
+                $submission->status = ASSIGN_SUBMISSION_STATUS_SUBMITTED;
+            }
+            $sid = $DB->insert_record('assign_submission', $submission);
+            $submission->id = $sid;
+            return $submission;
+        }
+        return false;
     }
     
     /**
@@ -61,7 +100,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
      */
     private function get_file_submission($submissionid) {
         global $DB;
-        return $DB->get_record('assign_submission_onlineaudio', array('submission'=>$submissionid));
+        return $DB->get_record('assignsubmission_onlineaudio', array('submission'=>$submissionid));
     }
     
     /**
@@ -300,13 +339,13 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
 
             if ($filesubmission) {
                 $filesubmission->numfiles = $this->count_files($submission->id, ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO);
-                return $DB->update_record('assign_submission_onlineaudio', $filesubmission);
+                return $DB->update_record('assignsubmission_onlineaudio', $filesubmission);
             } else {
                 $filesubmission = new stdClass();
                 $filesubmission->numfiles = $this->count_files($submission->id, ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO);
                 $filesubmission->submission = $submission->id;
                 $filesubmission->assignment = $this->assignment->get_instance()->id;
-                return $DB->insert_record('assign_submission_onlineaudio', $filesubmission) > 0;
+                return $DB->insert_record('assignsubmission_onlineaudio', $filesubmission) > 0;
             }
         }
     }
@@ -335,7 +374,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
      * @param stdClass $submission
      * @return string
      */
-    public function view_summary(stdClass $submission, & $showviewlink) {
+    public function view_summary(stdClass $submission, $showviewlink) {
         $count = $this->count_files($submission->id, ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO);
 
         // show we show a link to view all files for this plugin?
@@ -388,7 +427,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
      * @param string log record log events here
      * @return bool Was it a success? (false will trigger rollback)
      */
-    public function upgrade_settings(context $oldcontext,stdClass $oldassignment, $log) {
+    public function upgrade_settings(context $oldcontext,stdClass $oldassignment, & $log) {
         /*if ($oldassignment->assignmenttype == 'uploadsingle') {
             $this->set_config('maxfilesubmissions', 1);
             $this->set_config('maxsubmissionsizebytes', $oldassignment->maxbytes);
@@ -416,7 +455,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
      * @param string $log Record upgrade messages in the log
      * @return bool true or false - false will trigger a rollback
      */
-    public function upgrade(context $oldcontext, stdClass $oldassignment, stdClass $oldsubmission, stdClass $submission, $log) {
+    public function upgrade(context $oldcontext, stdClass $oldassignment, stdClass $oldsubmission, stdClass $submission, & $log) {
         global $DB;
 
         /*$filesubmission = new stdClass();
@@ -460,7 +499,7 @@ class assignment_submission_onlineaudio extends assignment_submission_plugin {
     public function delete_instance() {
         global $DB;
         // will throw exception on failure
-        $DB->delete_records('assign_submission_onlineaudio', array('assignment'=>$this->assignment->get_instance()->id));
+        $DB->delete_records('assignsubmission_onlineaudio', array('assignment'=>$this->assignment->get_instance()->id));
         
         return true;
     }
