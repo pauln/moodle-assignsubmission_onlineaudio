@@ -150,7 +150,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
      * @return string optional
      */
     public function print_user_files($submissionid, $allowdelete=true) {
-        global $CFG, $OUTPUT;
+        global $CFG, $OUTPUT, $DB;
 
         $strdelete = get_string('delete');
         $output = '';
@@ -188,7 +188,9 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                     $output .= $button->to_html(PORTFOLIO_ADD_ICON_LINK);
                 }
                 if (!empty($CFG->enableplagiarism)) {
-                    $output .= plagiarism_get_links(array('userid'=>$userid, 'file'=>$file, 'cmid'=>$this->assignment->get_course_module()->id, 'course'=>$this->course, 'assignment'=>$this->assignment));
+                    // Wouldn't it be nice if the assignment's get_submission method wasn't private?
+                    $submission = $DB->get_record('assign_submission', array('assignment'=>$this->assignment->get_instance()->id, 'id'=>$submissionid), '*', MUST_EXIST);
+                    $output .= plagiarism_get_links(array('userid'=>$submission->userid, 'file'=>$file, 'cmid'=>$this->assignment->get_course_module()->id, 'course'=>$this->assignment->get_course(), 'assignment'=>$this->assignment));
                 }
                 $output .= '<br />';
             }
@@ -374,7 +376,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
      * @param stdClass $submission
      * @return string
      */
-    public function view_summary(stdClass $submission, $showviewlink) {
+    public function view_summary(stdClass $submission, & $showviewlink) {
         $count = $this->count_files($submission->id, ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO);
 
         // show we show a link to view all files for this plugin?
