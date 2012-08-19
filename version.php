@@ -22,7 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version   = 2012041800;
+$plugin->version   = 2012041801;
+$plugin->release   = "1.0 Beta 1";
+$plugin->maturity  = MATURITY_BETA;
 $plugin->requires  = 2011110200;
 
 $plugin->component = 'assignsubmission_onlineaudio';
