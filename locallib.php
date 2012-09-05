@@ -116,6 +116,12 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
 
         $defaultmaxfilesubmissions = $this->get_config('maxfilesubmissions');
         $defaultmaxsubmissionsizebytes = $this->get_config('maxsubmissionsizebytes');
+        $defaultname = $this->get_config('defaultname');
+        $defaultnameoverride = $this->get_config('nameoverride');
+        if ($defaultnameoverride === false) { // Fallback default for defaultname is 0 anyway, so false should suffice
+            $defaultnameoverride = 1;
+        }
+
         
         $settings = array();
         $options = array();
@@ -127,6 +133,19 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         $mform->addHelpButton('assignsubmission_onlineaudio_maxfiles', 'maxfilessubmission', 'assignsubmission_onlineaudio');
         $mform->setDefault('assignsubmission_onlineaudio_maxfiles', $defaultmaxfilesubmissions);
         $mform->disabledIf('assignsubmission_onlineaudio_maxfiles', 'assignsubmission_onlineaudio_enabled', 'eq', 0);
+
+        $filenameoptions = array( 0 => get_string("nodefaultname", "assignment_onlineaudio"), 1 => get_string("defaultname1", "assignment_onlineaudio"), 2 =>get_string("defaultname2", "assignment_onlineaudio"));
+        $mform->addElement('select', 'assignsubmission_onlineaudio_defaultname', get_string("defaultname", "assignment_onlineaudio"), $filenameoptions);
+        $mform->addHelpButton('assignsubmission_onlineaudio_defaultname', 'defaultname', 'assignment_onlineaudio');
+        $mform->setDefault('assignsubmission_onlineaudio_defaultname', $defaultname);
+        $mform->disabledIf('assignsubmission_onlineaudio_defaultname', 'assignsubmission_onlineaudio_enabled', 'eq', 0);
+
+        $ynoptions = array( 0 => get_string('no'), 1 => get_string('yes'));
+        $mform->addElement('select', 'assignsubmission_onlineaudio_nameoverride', get_string("allownameoverride", "assignment_onlineaudio"), $ynoptions);
+        $mform->addHelpButton('assignsubmission_onlineaudio_nameoverride', 'allownameoverride', 'assignment_onlineaudio');
+        $mform->setDefault('assignsubmission_onlineaudio_nameoverride', $defaultnameoverride);
+        $mform->disabledIf('assignsubmission_onlineaudio_nameoverride', 'assignsubmission_onlineaudio_enabled', 'eq', 0);
+        $mform->disabledIf('assignsubmission_onlineaudio_nameoverride', 'assignsubmission_onlineaudio_defaultname', 'eq', 0);
     }
     
     /**
@@ -137,7 +156,8 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
      */
     public function save_settings(stdClass $data) {
         $this->set_config('maxfilesubmissions', $data->assignsubmission_onlineaudio_maxfiles);
-        //$this->set_config('maxsubmissionsizebytes', $data->assignsubmission_file_maxsizebytes);
+        $this->set_config('defaultname', $data->assignsubmission_onlineaudio_defaultname);
+        $this->set_config('nameoverride', $data->assignsubmission_onlineaudio_nameoverride);
         return true;
     }
 
@@ -217,6 +237,8 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         global $CFG, $USER;
         $submissionid = $submission ? $submission->id : 0;
         $maxfiles = $this->get_config('maxfilesubmissions');
+        $defaultname = $this->get_config('defaultname');
+        $allownameoverride = $this->get_config('nameoverride');
         if ($maxfiles <= 0) {
             return false;
         }
@@ -225,6 +247,17 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
             $url='submission/onlineaudio/assets/recorder.swf?gateway='.$CFG->wwwroot.'/mod/assign/submission/onlineaudio/upload.php';
 
             $flashvars="&filefield=assignment_file&id={$this->assignment->get_course_module()->id}&sid={$submissionid}";
+
+            if($defaultname) {
+                $field=($allownameoverride)?'filename':'forcename';
+                $filename=($defaultname==2)?fullname($USER):$USER->username;
+                $filename=clean_filename($filename);
+                $assignname=clean_filename($this->assignment->get_instance()->name);
+                $coursename=clean_filename($this->assignment->get_course()->shortname);
+                $filename.='_-_'.substr($assignname,0,20).'_-_'.$coursename.'_-_'.date('Y-m-d');
+                $filename=str_replace(' ', '_', $filename);
+                $flashvars .= "&$field=$filename";
+            }
 
             $html = '<script type="text/javascript" src="submission/onlineaudio/assets/swfobject.js"></script>
                 <script type="text/javascript">
@@ -409,13 +442,9 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
      * @return bool True if upgrade is possible
      */
     public function can_upgrade($type, $version) {
-        
-        /*$uploadsingletype ='uploadsingle';
-        $uploadtype ='upload';
-        
-        if (($type == $uploadsingletype || $type == $uploadtype) && $version >= 2011112900) {
+        if ($type == 'onlineaudio') {
             return true;
-        }*/
+        }
         return false;
     }
   
@@ -430,20 +459,11 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
      * @return bool Was it a success? (false will trigger rollback)
      */
     public function upgrade_settings(context $oldcontext,stdClass $oldassignment, & $log) {
-        /*if ($oldassignment->assignmenttype == 'uploadsingle') {
-            $this->set_config('maxfilesubmissions', 1);
-            $this->set_config('maxsubmissionsizebytes', $oldassignment->maxbytes);
-            return true;
-        }else {
-
-            $this->set_config('maxfilesubmissions', $oldassignment->var1);
-            $this->set_config('maxsubmissionsizebytes', $oldassignment->maxbytes);
-            return true;
-        }*/
-        return false;
-        
-        
-        
+        // Old assignment plugin ran out of vars so couldn't do max files, just default to module max
+        $this->set_config('maxfilesubmissions', ASSIGN_MAX_SUBMISSION_ONLINERECORDINGS);
+        $this->set_config('defaultname', $oldassignment->var2);
+        $this->set_config('nameoverride', $oldassignment->var3);
+        return true;
     }
      
     /**
@@ -460,19 +480,16 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
     public function upgrade(context $oldcontext, stdClass $oldassignment, stdClass $oldsubmission, stdClass $submission, & $log) {
         global $DB;
 
-        /*$filesubmission = new stdClass();
+        $filesubmission = new stdClass();
         
         $filesubmission->numfiles = $oldsubmission->numfiles;
         $filesubmission->submission = $submission->id;
         $filesubmission->assignment = $this->assignment->get_instance()->id;
         
-        if (!$DB->insert_record('assign_submission_file', $filesubmission) > 0) {
+        if (!$DB->insert_record('assign_submission_onlineaudio', $filesubmission) > 0) {
             $log .= get_string('couldnotconvertsubmission', 'mod_assign', $submission->userid);
             return false;
         }
-
-        
-        
         
         // now copy the area files
         $this->assignment->copy_area_files_for_upgrade($oldcontext->id, 
@@ -481,14 +498,10 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                                                         $oldsubmission->id,
                                                         // New file area
                                                         $this->assignment->get_context()->id, 
-                                                        'assignsubmission_file', 
+                                                        'assignsubmission_onlineaudio', 
                                                         ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO, 
                                                         $submission->id);
-        
-        */
-       
-        
-        
+
         return true;
     }
 
