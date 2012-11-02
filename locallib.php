@@ -195,7 +195,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                 $filtered = filter_text('<a href="'.$path.'" style="display:none;"> </a> ', $this->assignment->get_course()->id);
                 $filtered = preg_replace('~<a.+?</a>~','',$filtered);
                 // Add a real link after the dummy one, so that we get a proper download link no matter what
-                $output .= $filtered . '<a href="'.$path.'" >'.s($filename).'</a></span>';
+                $output .= $filtered . '</span><a href="'.$path.'" >'.s($filename).'</a>';
                 if($allowdelete) {
                     $delurl  = "$CFG->wwwroot/mod/assign/submission/onlineaudio/delete.php?id={$this->assignment->get_course_module()->id}&amp;sid={$submissionid}&amp;path=$filepath&amp;file=$filename";//&amp;userid={$submission->userid} &amp;mode=$mode&amp;offset=$offset
 
