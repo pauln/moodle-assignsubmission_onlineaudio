@@ -486,7 +486,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         $filesubmission->submission = $submission->id;
         $filesubmission->assignment = $this->assignment->get_instance()->id;
         
-        if (!$DB->insert_record('assign_submission_onlineaudio', $filesubmission) > 0) {
+        if (!$DB->insert_record('assignsubmission_onlineaudio', $filesubmission) > 0) {
             $log .= get_string('couldnotconvertsubmission', 'mod_assign', $submission->userid);
             return false;
         }
