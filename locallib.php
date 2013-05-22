@@ -391,7 +391,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
      * @param stdClass $submission The submission
      * @return array - return an array of files indexed by filename
      */
-    public function get_files(stdClass $submission) {
+    public function get_files(stdClass $submission, stdClass $user=null) {
         $result = array();
         $fs = get_file_storage();
 
