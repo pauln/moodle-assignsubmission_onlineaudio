@@ -134,15 +134,15 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         $mform->setDefault('assignsubmission_onlineaudio_maxfiles', $defaultmaxfilesubmissions);
         $mform->disabledIf('assignsubmission_onlineaudio_maxfiles', 'assignsubmission_onlineaudio_enabled', 'eq', 0);
 
-        $filenameoptions = array( 0 => get_string("nodefaultname", "assignment_onlineaudio"), 1 => get_string("defaultname1", "assignment_onlineaudio"), 2 =>get_string("defaultname2", "assignment_onlineaudio"));
-        $mform->addElement('select', 'assignsubmission_onlineaudio_defaultname', get_string("defaultname", "assignment_onlineaudio"), $filenameoptions);
-        $mform->addHelpButton('assignsubmission_onlineaudio_defaultname', 'defaultname', 'assignment_onlineaudio');
+        $filenameoptions = array( 0 => get_string("nodefaultname", "assignsubmission_onlineaudio"), 1 => get_string("defaultname1", "assignsubmission_onlineaudio"), 2 =>get_string("defaultname2", "assignsubmission_onlineaudio"));
+        $mform->addElement('select', 'assignsubmission_onlineaudio_defaultname', get_string("defaultname", "assignsubmission_onlineaudio"), $filenameoptions);
+        $mform->addHelpButton('assignsubmission_onlineaudio_defaultname', 'defaultname', 'assignsubmission_onlineaudio');
         $mform->setDefault('assignsubmission_onlineaudio_defaultname', $defaultname);
         $mform->disabledIf('assignsubmission_onlineaudio_defaultname', 'assignsubmission_onlineaudio_enabled', 'eq', 0);
 
         $ynoptions = array( 0 => get_string('no'), 1 => get_string('yes'));
-        $mform->addElement('select', 'assignsubmission_onlineaudio_nameoverride', get_string("allownameoverride", "assignment_onlineaudio"), $ynoptions);
-        $mform->addHelpButton('assignsubmission_onlineaudio_nameoverride', 'allownameoverride', 'assignment_onlineaudio');
+        $mform->addElement('select', 'assignsubmission_onlineaudio_nameoverride', get_string("allownameoverride", "assignsubmission_onlineaudio"), $ynoptions);
+        $mform->addHelpButton('assignsubmission_onlineaudio_nameoverride', 'allownameoverride', 'assignsubmission_onlineaudio');
         $mform->setDefault('assignsubmission_onlineaudio_nameoverride', $defaultnameoverride);
         $mform->disabledIf('assignsubmission_onlineaudio_nameoverride', 'assignsubmission_onlineaudio_enabled', 'eq', 0);
         $mform->disabledIf('assignsubmission_onlineaudio_nameoverride', 'assignsubmission_onlineaudio_defaultname', 'eq', 0);
