@@ -177,7 +177,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         $fs = get_file_storage();
         $files = $fs->get_area_files($this->assignment->get_context()->id, 'assignsubmission_onlineaudio', ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO, $submissionid, "id", false);
         if (!empty($files)) {
-            require_once($CFG->dirroot . '/mod/assignment/locallib.php');
+            require_once($CFG->dirroot . '/mod/assign/locallib.php');
             if ($CFG->enableportfolios) {
                 require_once($CFG->libdir.'/portfoliolib.php');
                 $button = new portfolio_add_button();
@@ -202,7 +202,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                     $output .= '<a href="'.$delurl.'">&nbsp;'
                               .'<img title="'.$strdelete.'" src="'.$OUTPUT->pix_url('/t/delete').'" class="iconsmall" alt="" /></a> ';
                 }
-                if ($CFG->enableportfolios && $this->portfolio_exportable() && has_capability('mod/assignment:exportownsubmission', $this->$this->assignment->get_context())) {
+                if ($CFG->enableportfolios && $this->portfolio_exportable() && has_capability('mod/assign:exportownsubmission', $this->$this->assignment->get_context())) {
                     $button->set_callback_options('assign_portfolio_caller', array('cmid' => $this->assignment->get_course_module()->id, 'sid'=>$submissionid, 'area'=>ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO), '/mod/assign/portfolio_callback.php');
                     $button->set_format_by_file($file);
                     $output .= $button->to_html(PORTFOLIO_ADD_ICON_LINK);
@@ -214,7 +214,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                 }
                 $output .= '<br />';
             }
-            if ($CFG->enableportfolios && count($files) > 1  && $this->portfolio_exportable() && has_capability('mod/assignment:exportownsubmission', $this->$this->assignment->get_context())) {
+            if ($CFG->enableportfolios && count($files) > 1  && $this->portfolio_exportable() && has_capability('mod/assign:exportownsubmission', $this->$this->assignment->get_context())) {
                 $button->set_callback_options('assign_portfolio_caller', array('cmid' => $this->assignment->get_course_module()->id, 'sid'=>$submissionid, 'area'=>ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO), '/mod/assign/portfolio_callback.php');
                 $output .= '<br />'  . $button->to_html(PORTFOLIO_ADD_TEXT_LINK);
             }
