@@ -1,4 +1,4 @@
-<?php 
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 
 /**
  * This file contains the definition for the library class for file submission plugin
- * 
+ *
  * This class provides all the functionality for the new assign module.
  *
  * @package assignsubmission_onlineaudio
@@ -37,16 +37,16 @@ define('ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO', 'submission_onlineaudio');
 
 /*
  * library class for online audio recording submission plugin extending submission plugin base class
- * 
+ *
  * @package   assignsubmission_onlineaudio
  * @copyright 2012 Paul Nicholls
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class assign_submission_onlineaudio extends assign_submission_plugin {
-    
+
     /**
      * Get the name of the file submission plugin
-     * @return string 
+     * @return string
      */
     public function get_name() {
         return get_string('recording', 'assignsubmission_onlineaudio');
@@ -90,19 +90,19 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         }
         return false;
     }
-    
+
     /**
      * Get file submission information from the database
-     * 
+     *
      * @global moodle_database $DB
      * @param int $submissionid
-     * @return mixed 
+     * @return mixed
      */
     private function get_file_submission($submissionid) {
         global $DB;
         return $DB->get_record('assignsubmission_onlineaudio', array('submission'=>$submissionid));
     }
-    
+
     /**
      * Get the default setting for file submission plugin
      *
@@ -122,13 +122,13 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
             $defaultnameoverride = 1;
         }
 
-        
+
         $settings = array();
         $options = array();
         for($i = 1; $i <= ASSIGN_MAX_SUBMISSION_ONLINERECORDINGS; $i++) {
             $options[$i] = $i;
         }
-        
+
         $mform->addElement('select', 'assignsubmission_onlineaudio_maxfiles', get_string('maxfilessubmission', 'assignsubmission_onlineaudio'), $options);
         $mform->addHelpButton('assignsubmission_onlineaudio_maxfiles', 'maxfilessubmission', 'assignsubmission_onlineaudio');
         $mform->setDefault('assignsubmission_onlineaudio_maxfiles', $defaultmaxfilesubmissions);
@@ -147,12 +147,12 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         $mform->disabledIf('assignsubmission_onlineaudio_nameoverride', 'assignsubmission_onlineaudio_enabled', 'eq', 0);
         $mform->disabledIf('assignsubmission_onlineaudio_nameoverride', 'assignsubmission_onlineaudio_defaultname', 'eq', 0);
     }
-    
+
     /**
      * Save the settings for file submission plugin
      *
      * @param stdClass $data
-     * @return bool 
+     * @return bool
      */
     public function save_settings(stdClass $data) {
         $this->set_config('maxfilesubmissions', $data->assignsubmission_onlineaudio_maxfiles);
@@ -192,7 +192,12 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                 $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$this->assignment->get_context()->id.'/assignsubmission_onlineaudio/submission_onlineaudio/'.$submissionid.'/'.$filename);
                 $output .= '<span style="white-space:nowrap;"><img src="'.$OUTPUT->pix_url(file_mimetype_icon($mimetype)).'" class="icon" alt="'.$mimetype.'" />';
                 // Dummy link for media filters
-                $filtered = filter_text('<a href="'.$path.'" style="display:none;"> </a> ', $this->assignment->get_course()->id);
+                $options = array(
+                            'context'=>$this->assignment->get_context(),
+                            'trusted'=>true,
+                            'noclean'=>true
+                        );
+                $filtered = format_text('<a href="'.$path.'" style="display:none;"> </a> ', $format = FORMAT_HTML, $options);
                 $filtered = preg_replace('~<a.+?</a>~','',$filtered);
                 // Add a real link after the dummy one, so that we get a proper download link no matter what
                 $output .= $filtered . '</span><a href="'.$path.'" >'.s($filename).'</a>';
@@ -224,14 +229,14 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
 
         return $output;
     }
-   
+
     /**
      * Add elements to submission form
-     * 
+     *
      * @param mixed stdClass|null $submission
      * @param MoodleQuickForm $submission
      * @param stdClass $data
-     * @return bool 
+     * @return bool
      */
     public function get_form_elements($submission, MoodleQuickForm $mform, stdClass $data) {
         global $CFG, $USER;
@@ -282,16 +287,16 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
             $mform->addElement('html', '<p>'.get_string('maxfilesreached', 'assignsubmission_onlineaudio').'</p>');
         }
         $mform->addElement('html', $this->print_user_files($submissionid));
-        
+
         return true;
     }
 
     /**
      * Count the number of files
-     * 
+     *
      * @param int $submissionid
      * @param string $area
-     * @return int 
+     * @return int
      */
     private function count_files($submissionid, $area) {
 
@@ -308,7 +313,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
      * @global moodle_database $DB
      * @param stdClass $submission
      * @param stdClass $file
-     * @return bool 
+     * @return bool
      */
     public function add_recording(stdClass $submission) {
         global $USER, $DB;
@@ -328,12 +333,12 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         if (!is_uploaded_file($filesrc)) {
             return false;
         }
-        
+
         $ext = substr(strrchr($filename, '.'), 1);
         if (!preg_match('/^(mp3|wav|wma)$/i',$ext)) {
             return false;
         }
-        
+
         $temp_name=basename($filename,".$ext"); // We want to clean the file's base name only
         // Run param_clean here with PARAM_FILE so that we end up with a name that other parts of Moodle
         // (download script, deletion, etc) will handle properly.  Remove leading/trailing dots too.
@@ -387,7 +392,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
 
     /**
      * Produce a list of files suitable for export that represent this feedback or submission
-     * 
+     *
      * @param stdClass $submission The submission
      * @return array - return an array of files indexed by filename
      */
@@ -402,7 +407,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         }
         return $result;
     }
-    
+
     /**
      * Display the list of files  in the submission status table
      *
@@ -423,20 +428,20 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
 
     /**
      * No full submission view - the summary contains the list of files and that is the whole submission
-     * 
+     *
      * @param stdClass $submission
-     * @return string 
+     * @return string
      */
     public function view(stdClass $submission) {
         return $this->assignment->render_area_files('assignsubmission_onlineaudio', ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO, $submission->id);
     }
-    
+
 
 
     /**
      * Return true if this plugin can upgrade an old Moodle 2.2 assignment of this type
      * and version.
-     * 
+     *
      * @param string $type
      * @param int $version
      * @return bool True if upgrade is possible
@@ -447,12 +452,12 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         }
         return false;
     }
-  
-    
+
+
     /**
-     * Upgrade the settings from the old assignment 
+     * Upgrade the settings from the old assignment
      * to the new plugin based one
-     * 
+     *
      * @param context $oldcontext - the old assignment context
      * @param stdClass $oldassignment - the old assignment data record
      * @param string log record log events here
@@ -465,10 +470,10 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         $this->set_config('nameoverride', $oldassignment->var3);
         return true;
     }
-     
+
     /**
      * Upgrade the submission from the old assignment to the new one
-     * 
+     *
      * @global moodle_database $DB
      * @param context $oldcontext The context of the old assignment
      * @param stdClass $oldassignment The data record for the old oldassignment
@@ -481,25 +486,25 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         global $DB;
 
         $filesubmission = new stdClass();
-        
+
         $filesubmission->numfiles = $oldsubmission->numfiles;
         $filesubmission->submission = $submission->id;
         $filesubmission->assignment = $this->assignment->get_instance()->id;
-        
+
         if (!$DB->insert_record('assignsubmission_onlineaudio', $filesubmission) > 0) {
             $log .= get_string('couldnotconvertsubmission', 'mod_assign', $submission->userid);
             return false;
         }
-        
+
         // now copy the area files
-        $this->assignment->copy_area_files_for_upgrade($oldcontext->id, 
-                                                        'mod_assignment', 
-                                                        'submission', 
+        $this->assignment->copy_area_files_for_upgrade($oldcontext->id,
+                                                        'mod_assignment',
+                                                        'submission',
                                                         $oldsubmission->id,
                                                         // New file area
-                                                        $this->assignment->get_context()->id, 
-                                                        'assignsubmission_onlineaudio', 
-                                                        ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO, 
+                                                        $this->assignment->get_context()->id,
+                                                        'assignsubmission_onlineaudio',
+                                                        ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO,
                                                         $submission->id);
 
         return true;
@@ -507,7 +512,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
 
     /**
      * The assignment has been deleted - cleanup
-     * 
+     *
      * @global moodle_database $DB
      * @return bool
      */
@@ -515,15 +520,15 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
         global $DB;
         // will throw exception on failure
         $DB->delete_records('assignsubmission_onlineaudio', array('assignment'=>$this->assignment->get_instance()->id));
-        
+
         return true;
     }
-    
+
     /**
      * Formatting for log info
-     * 
+     *
      * @param stdClass $submission The submission
-     * 
+     *
      * @return string
      */
     public function format_for_log(stdClass $submission) {
