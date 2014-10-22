@@ -219,7 +219,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                 }
                 $output .= '<br />';
             }
-            if ($CFG->enableportfolios && count($files) > 1  && $this->portfolio_exportable() && has_capability('mod/assign:exportownsubmission', $this->$this->assignment->get_context())) {
+            if ($CFG->enableportfolios && count($files) > 1  && has_capability('mod/assign:exportownsubmission', $this->$this->assignment->get_context())) {
                 $button->set_callback_options('assign_portfolio_caller', array('cmid' => $this->assignment->get_course_module()->id, 'sid'=>$submissionid, 'area'=>ASSIGN_FILEAREA_SUBMISSION_ONLINEAUDIO), '/mod/assign/portfolio_callback.php');
                 $output .= '<br />'  . $button->to_html(PORTFOLIO_ADD_TEXT_LINK);
             }
