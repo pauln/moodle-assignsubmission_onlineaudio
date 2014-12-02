@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version   = 2014112400;
-$plugin->release   = "1.2.0";
+$plugin->version   = 2014112401;
+$plugin->release   = "1.2.1";
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2013051400;
 
