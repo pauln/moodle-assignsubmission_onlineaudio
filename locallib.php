@@ -276,7 +276,7 @@ class assign_submission_onlineaudio extends assign_submission_plugin {
                         <object type="application/x-shockwave-flash" data="'.$url.$flashvars.'" width="215" height="138">
                         <!--<![endif]-->
                         <div>
-                                <p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
+                                <p><a href="http://www.adobe.com/go/getflashplayer"><img src="//www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
                         </div>
                         <!--[if !IE]>-->
                         </object>
