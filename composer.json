@@ -1,0 +1,10 @@
+{
+    "name": "pauln/moodle-assignsubmission_onlineaudio",
+    "type": "moodle-assignsubmission",
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "installer-name": "onlineaudio"
+    }
+}
