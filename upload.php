@@ -30,7 +30,8 @@ $viewurl->param('action', 'editsubmission');
 $PAGE->set_url($url);
 
 $submission_plugin = $assignment->get_submission_plugin_by_type('onlineaudio');
-$submission = $submission_plugin->get_user_submission_record($USER->id, true);
+
+$submission = $assignment->get_user_submission($USER->id, true);
 
 if($submission_plugin->add_recording($submission)) {
     redirect($viewurl);
